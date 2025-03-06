@@ -68,9 +68,16 @@ const Index = () => {
                 transition={{ duration: 0.5 }}
                 className="text-center"
               >
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight">
-                  Detector de Plagio para TFG y TFM
-                </h1>
+                <div className="flex items-center justify-center mb-4">
+                  <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+                    Detector de Plagio para TFG y TFM
+                  </h1>
+                  <img 
+                    src="/lovable-uploads/5d8ee91c-bb2c-4769-8c37-63ea27e63d35.png" 
+                    alt="Detector de Plagio Logo" 
+                    className="h-16 ml-4" 
+                  />
+                </div>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                   Analiza tu trabajo académico y detecta coincidencias con contenido publicado en internet.
                 </p>
