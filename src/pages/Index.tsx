@@ -73,7 +73,7 @@ const Index = () => {
                     Detector de Plagio para TFG y TFM
                   </h1>
                   <img 
-                    src="/lovable-uploads/5d8ee91c-bb2c-4769-8c37-63ea27e63d35.png" 
+                    src="/lovable-uploads/30ab1b90-1431-41f8-a2e2-5c0f3219f20b.png" 
                     alt="Detector de Plagio Logo" 
                     className="h-16 ml-4" 
                   />

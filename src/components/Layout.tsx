@@ -13,6 +13,11 @@ export function Layout({ children }: LayoutProps) {
       <header className="border-b border-border/40 backdrop-blur-sm bg-background/70 fixed top-0 w-full z-10">
         <div className="page-container py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
+            <img 
+              src="/lovable-uploads/30ab1b90-1431-41f8-a2e2-5c0f3219f20b.png" 
+              alt="Plagiarism Sensor Logo" 
+              className="h-8 mr-2" 
+            />
             <Link to="/" className="text-2xl font-bold text-primary tracking-tight">
               TFG Plagiarism Sensor
             </Link>
