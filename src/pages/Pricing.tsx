@@ -1,75 +1,124 @@
 
-import { Layout } from "@/components/Layout";
-import { Pricing } from "@/components/blocks/pricing";
+import React, { useState } from 'react';
+import { Layout } from "../components/Layout";
+import { PricingCard } from "@/components/ui/pricing-card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const plans = [
+interface Plan {
+  name: string
+  price: Record<string, number | string>
+  description: string
+  features: string[]
+  cta: string
+  highlighted?: boolean
+  popular?: boolean
+}
+
+const PRICING_TIERS: Plan[] = [
   {
-    name: "BASIC",
-    price: "29",
-    yearlyPrice: "23",
-    period: "per month",
+    name: "Detector Básico",
+    price: {
+      monthly: 9.99,
+      yearly: 99.99,
+    },
+    description: "Para estudiantes individuales con TFG/TFM",
     features: [
-      "Up to 10 document scans",
-      "Basic plagiarism detection",
-      "24-hour support response time",
-      "Single user license",
-      "Standard report generation",
+      "Hasta 3 documentos por mes",
+      "Detección básica de plagio",
+      "Soporte por email",
+      "Resultados en 24 horas",
+      "Formato PDF y Word",
     ],
-    description: "Perfect for students and individual projects",
-    buttonText: "Start Free Trial",
-    href: "/sign-up",
-    isPopular: false,
+    cta: "Empezar Gratis",
+    highlighted: false,
+    popular: false,
   },
   {
-    name: "PRO",
-    price: "79",
-    yearlyPrice: "63",
-    period: "per month",
+    name: "Detector Premium",
+    price: {
+      monthly: 29.99,
+      yearly: 299.99,
+    },
+    description: "Para estudiantes avanzados y profesores",
     features: [
-      "Unlimited document scans",
-      "Advanced plagiarism detection",
-      "12-hour support response time",
-      "Up to 3 user licenses",
-      "Detailed reports with sources",
-      "Document comparison tools",
-      "Integration with academic databases",
+      "Documentos ilimitados",
+      "Detección avanzada de plagio",
+      "Soporte prioritario 24/7",
+      "Resultados en tiempo real",
+      "Análisis de citas y referencias",
+      "Sugerencias de mejora",
+      "Detección multilingüe",
     ],
-    description: "Ideal for researchers and small departments",
-    buttonText: "Get Started",
-    href: "/sign-up",
-    isPopular: true,
+    cta: "Comprar Ahora",
+    highlighted: true,
+    popular: true,
   },
   {
-    name: "ENTERPRISE",
-    price: "199",
-    yearlyPrice: "159",
-    period: "per month",
+    name: "Institucional",
+    price: {
+      monthly: 99.99,
+      yearly: 999.99,
+    },
+    description: "Para universidades y centros de investigación",
     features: [
-      "Everything in Pro",
-      "Custom detection algorithms",
-      "Dedicated account manager",
-      "1-hour support response time",
-      "Unlimited user licenses",
-      "API access for integration",
-      "Custom reporting tools",
-      "Educational institution discounts",
+      "Todo lo de Premium",
+      "API para integración",
+      "Usuario y contraseñas múltiples",
+      "Personalización de informes",
+      "Estadísticas avanzadas",
+      "Formación para profesores",
+      "Gestor de cuenta dedicado",
+      "SLA garantizado",
     ],
-    description: "For universities and research institutions",
-    buttonText: "Contact Sales",
-    href: "/contact",
-    isPopular: false,
+    cta: "Contactar",
+    highlighted: false,
+    popular: false,
   },
 ];
 
-export default function PricingPage() {
+const PricingPage: React.FC = () => {
+  const [frequency, setFrequency] = useState<string>("monthly");
+  
   return (
     <Layout>
-      <Pricing 
-        plans={plans}
-        title="Plagiarism Detection Pricing"
-        description="Choose the plan that works for your needs
-All plans include our core plagiarism detection technology with different levels of access and features."
-      />
+      <div className="container max-w-6xl mx-auto py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">Planes de Precios</h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Elige el plan que mejor se adapte a tus necesidades académicas. 
+            Todos los planes incluyen nuestra tecnología de detección de plagio.
+          </p>
+          
+          <div className="mt-8 flex justify-center">
+            <ToggleGroup type="single" value={frequency} onValueChange={(value) => value && setFrequency(value)}>
+              <ToggleGroupItem value="monthly" aria-label="Mensual">
+                Mensual
+              </ToggleGroupItem>
+              <ToggleGroupItem value="yearly" aria-label="Anual">
+                Anual <span className="text-primary ml-1 text-xs">-16%</span>
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-3">
+          {PRICING_TIERS.map((tier) => (
+            <PricingCard 
+              key={tier.name} 
+              tier={tier} 
+              paymentFrequency={frequency} 
+            />
+          ))}
+        </div>
+        
+        <div className="mt-16 text-center">
+          <p className="text-muted-foreground">
+            ¿Necesitas un plan personalizado? <a href="/contact" className="text-primary font-medium">Contacta con nosotros</a>
+          </p>
+        </div>
+      </div>
     </Layout>
   );
-}
+};
+
+export default PricingPage;
