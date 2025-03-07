@@ -3,81 +3,75 @@ import React, { useState } from 'react';
 import { Layout } from "../components/Layout";
 import { PricingCard } from "@/components/ui/pricing-card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useNavigate } from 'react-router-dom';
 
 interface Plan {
   name: string
-  price: Record<string, number | string>
+  price: number
   description: string
   features: string[]
   cta: string
   highlighted?: boolean
   popular?: boolean
+  credits: string
 }
 
 const PRICING_TIERS: Plan[] = [
   {
-    name: "Detector Básico",
-    price: {
-      monthly: 9.99,
-      yearly: 99.99,
-    },
-    description: "Para estudiantes individuales con TFG/TFM",
+    name: "Plan Básico",
+    price: 5,
+    description: "Para uso individual ocasional",
     features: [
-      "Hasta 3 documentos por mes",
-      "Detección básica de plagio",
+      "5 créditos premium",
+      "Análisis de coincidencias básico",
       "Soporte por email",
       "Resultados en 24 horas",
       "Formato PDF y Word",
     ],
-    cta: "Empezar Gratis",
+    cta: "Comprar ahora",
     highlighted: false,
     popular: false,
+    credits: "5 créditos"
   },
   {
-    name: "Detector Premium",
-    price: {
-      monthly: 29.99,
-      yearly: 299.99,
-    },
-    description: "Para estudiantes avanzados y profesores",
+    name: "Plan Mensual",
+    price: 10,
+    description: "Para estudiantes con necesidades continuas",
     features: [
-      "Documentos ilimitados",
-      "Detección avanzada de plagio",
-      "Soporte prioritario 24/7",
+      "Créditos premium ilimitados por 30 días",
+      "Análisis avanzado de coincidencias",
+      "Soporte prioritario",
       "Resultados en tiempo real",
       "Análisis de citas y referencias",
-      "Sugerencias de mejora",
-      "Detección multilingüe",
+      "Sugerencias de mejora detalladas",
     ],
-    cta: "Comprar Ahora",
+    cta: "Suscribirse",
     highlighted: true,
     popular: true,
+    credits: "Ilimitados por 30 días"
   },
   {
-    name: "Institucional",
-    price: {
-      monthly: 99.99,
-      yearly: 999.99,
-    },
-    description: "Para universidades y centros de investigación",
+    name: "Plan Vitalicio",
+    price: 20,
+    description: "Acceso ilimitado para siempre",
     features: [
-      "Todo lo de Premium",
-      "API para integración",
-      "Usuario y contraseñas múltiples",
-      "Personalización de informes",
-      "Estadísticas avanzadas",
-      "Formación para profesores",
-      "Gestor de cuenta dedicado",
-      "SLA garantizado",
+      "Créditos premium ilimitados para siempre",
+      "Todas las características premium",
+      "Acceso de por vida",
+      "Actualizaciones gratuitas",
+      "Soporte prioritario permanente",
+      "Resultados instantáneos",
+      "Acceso a herramientas avanzadas",
     ],
-    cta: "Contactar",
+    cta: "Comprar acceso vitalicio",
     highlighted: false,
     popular: false,
+    credits: "Ilimitados para siempre"
   },
 ];
 
 const PricingPage: React.FC = () => {
-  const [frequency, setFrequency] = useState<string>("monthly");
+  const navigate = useNavigate();
   
   return (
     <Layout>
@@ -85,20 +79,9 @@ const PricingPage: React.FC = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Planes Premium</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Elige el plan que mejor se adapte a tus necesidades académicas. 
-            Todos los planes incluyen nuestra tecnología de detección de plagio.
+            Si quieres un informe más completo, incluyendo la información a cambiar para evitar 
+            el plagio, mejora a la versión premium para obtener créditos.
           </p>
-          
-          <div className="mt-8 flex justify-center">
-            <ToggleGroup type="single" value={frequency} onValueChange={(value) => value && setFrequency(value)}>
-              <ToggleGroupItem value="monthly" aria-label="Mensual">
-                Mensual
-              </ToggleGroupItem>
-              <ToggleGroupItem value="yearly" aria-label="Anual">
-                Anual <span className="text-primary ml-1 text-xs">-16%</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </div>
         </div>
         
         <div className="grid gap-6 md:grid-cols-3">
@@ -106,15 +89,9 @@ const PricingPage: React.FC = () => {
             <PricingCard 
               key={tier.name} 
               tier={tier} 
-              paymentFrequency={frequency} 
+              onClick={() => navigate('/checkout')}
             />
           ))}
-        </div>
-        
-        <div className="mt-16 text-center">
-          <p className="text-muted-foreground">
-            ¿Necesitas un plan personalizado? <a href="/contact" className="text-primary font-medium">Contacta con nosotros</a>
-          </p>
         </div>
       </div>
     </Layout>

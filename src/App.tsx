@@ -28,11 +28,15 @@ const App = () => {
   // Forzar HTTPS al cargar la aplicación
   useEffect(() => {
     forceHTTPS();
+    
+    // Establecer tema claro como predeterminado
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
+      <ThemeProvider defaultTheme="light">
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
@@ -54,3 +58,4 @@ const App = () => {
 };
 
 export default App;
+

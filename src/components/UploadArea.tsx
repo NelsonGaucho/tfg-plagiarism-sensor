@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, File, AlertCircle } from 'lucide-react';
+import { Upload, FileText, File, AlertCircle, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
@@ -113,6 +113,14 @@ export function UploadArea({ onFileAccepted, isProcessing }: UploadAreaProps) {
           <AlertCircle className="h-4 w-4" />
           Máx 10MB
         </div>
+      </div>
+      
+      <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 p-3 rounded-lg border border-emerald-200 dark:border-emerald-900 mb-6 max-w-md">
+        <ShieldCheck className="h-5 w-5 flex-shrink-0" />
+        <p className="text-sm text-left">
+          No almacenamos los documentos subidos ni vendemos datos a plataformas externas. 
+          Todos los archivos se procesan en memoria y se eliminan una vez terminada la consulta.
+        </p>
       </div>
       
       <Button 

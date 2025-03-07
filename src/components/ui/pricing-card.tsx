@@ -2,8 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { BadgeCheck, ArrowRight } from "lucide-react"
-import NumberFlow from "@number-flow/react"
+import { BadgeCheck, ArrowRight, Diamond } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -12,21 +11,21 @@ import { Card } from "@/components/ui/card"
 
 export interface PricingTier {
   name: string
-  price: Record<string, number | string>
+  price: number
   description: string
   features: string[]
   cta: string
   highlighted?: boolean
   popular?: boolean
+  credits: string
 }
 
 interface PricingCardProps {
   tier: PricingTier
-  paymentFrequency: string
+  onClick?: () => void
 }
 
-export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
-  const price = tier.price[paymentFrequency]
+export function PricingCard({ tier, onClick }: PricingCardProps) {
   const isHighlighted = tier.highlighted
   const isPopular = tier.popular
 
@@ -47,31 +46,19 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
         {tier.name}
         {isPopular && (
           <Badge variant="secondary" className="mt-1 z-10">
-            🔥 Most Popular
+            🔥 Más Popular
           </Badge>
         )}
       </h2>
 
       <div className="relative h-12">
-        {typeof price === "number" ? (
-          <>
-            <NumberFlow
-              format={{
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-              }}
-              value={price}
-              className="text-4xl font-medium"
-            />
-            <p className="-mt-2 text-xs text-muted-foreground">
-              Per month/user
-            </p>
-          </>
-        ) : (
-          <h1 className="text-4xl font-medium">{price}</h1>
-        )}
+        <div className="flex items-baseline">
+          <span className="text-4xl font-medium">{tier.price}€</span>
+        </div>
+        <div className="flex items-center mt-1 text-sm">
+          <Diamond className="h-4 w-4 mr-1 text-emerald-600" />
+          <span className="text-muted-foreground">{tier.credits}</span>
+        </div>
       </div>
 
       <div className="flex-1 space-y-2">
@@ -85,7 +72,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
                 isHighlighted ? "text-background" : "text-muted-foreground"
               )}
             >
-              <BadgeCheck className="h-4 w-4" />
+              <BadgeCheck className="h-4 w-4 flex-shrink-0" />
               {feature}
             </li>
           ))}
@@ -95,6 +82,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
       <Button
         variant={isHighlighted ? "secondary" : "default"}
         className="w-full"
+        onClick={onClick}
       >
         {tier.cta}
         <ArrowRight className="ml-2 h-4 w-4" />

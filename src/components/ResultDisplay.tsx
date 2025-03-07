@@ -1,9 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, AlertTriangle, XCircle, FileText, DownloadCloud, RotateCcw } from 'lucide-react';
+import { CheckCircle, AlertTriangle, XCircle, FileText, DownloadCloud, RotateCcw, Diamond, LockKeyhole } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 interface ResultDisplayProps {
   plagiarismPercentage: number;
@@ -14,6 +16,9 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
   const isLow = plagiarismPercentage <= 20;
   const isMedium = plagiarismPercentage > 20 && plagiarismPercentage <= 50;
   const isHigh = plagiarismPercentage > 50;
+  const [premiumUnlocked, setPremiumUnlocked] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
   const getStatusColor = () => {
     if (isLow) return 'text-plagiarism-low';
@@ -57,6 +62,27 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
     { url: "repositorio-universidad.edu/tesis-2018", matchPercentage: plagiarismPercentage * 0.3 },
     { url: "plataforma-academica.com/paper-2019", matchPercentage: plagiarismPercentage * 0.2 },
   ];
+
+  // Documento de ejemplo con secciones marcadas (verde/rojo)
+  const documentSections = [
+    { text: "1. Introducción\n\nEste trabajo de fin de grado tiene como objetivo analizar el impacto de las redes sociales en los jóvenes universitarios.", isSafe: true },
+    { text: "Los estudios previos han demostrado que existe una correlación entre el uso de redes sociales y el rendimiento académico, como señala García (2019).", isSafe: true },
+    { text: "Las redes sociales se han convertido en una herramienta fundamental para la comunicación entre los jóvenes universitarios, afectando su forma de relacionarse y de consumir información.", isSafe: false },
+    { text: "2. Marco teórico\n\nLa teoría de la comunicación digital establece que los canales de comunicación influyen directamente en la forma en que se procesa la información (Johnson, 2018).", isSafe: true },
+    { text: "Diferentes autores han planteado que las redes sociales generan dependencia psicológica y afectan la capacidad de concentración de los estudiantes universitarios.", isSafe: false },
+    { text: "Los algoritmos de las redes sociales premian el contenido que genera mayor engagement, lo que puede llevar a la creación de burbujas informativas.", isSafe: true },
+    { text: "3. Metodología\n\nPara este estudio se utilizó una metodología mixta, combinando encuestas cuantitativas con entrevistas cualitativas a una muestra de 250 estudiantes universitarios.", isSafe: true },
+    { text: "Las variables dependientes fueron el rendimiento académico, medido por la nota media, y el tiempo dedicado al estudio. Las variables independientes incluyeron el tiempo de uso de redes sociales y el tipo de actividad realizada en ellas.", isSafe: false },
+    { text: "4. Resultados\n\nLos resultados indican que existe una correlación negativa entre el tiempo de uso de redes sociales y el rendimiento académico (r = -0.42, p < 0.01).", isSafe: true },
+    { text: "El análisis multivariante mostró que los estudiantes que utilizan redes sociales más de 3 horas diarias tienen un 27% menos de tiempo dedicado al estudio.", isSafe: false },
+    { text: "5. Conclusiones\n\nEste trabajo demuestra que el uso excesivo de redes sociales afecta negativamente el rendimiento académico de los estudiantes universitarios.", isSafe: true },
+    { text: "Se recomienda implementar programas de concientización sobre el uso responsable de tecnologías digitales en el ámbito universitario.", isSafe: true },
+  ];
+
+  const unlockPremiumContent = () => {
+    // Aquí iría la lógica para verificar y descontar créditos
+    setPremiumUnlocked(true);
+  };
 
   return (
     <div className="w-full animate-fade-in">
@@ -138,7 +164,7 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
           </div>
         </div>
         
-        <div>
+        <div className="mb-8">
           <h3 className="font-semibold mb-3">Principales fuentes similares</h3>
           <div className="space-y-3">
             {plagiarismSources.map((source, index) => (
@@ -156,17 +182,86 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
             ))}
           </div>
         </div>
-      </div>
-      
-      <div className="flex justify-center">
-        <Button 
-          onClick={onReset} 
-          variant="outline" 
-          className="gap-2 hover:bg-background"
-        >
-          <RotateCcw className="h-4 w-4" />
-          <span>Analizar otro documento</span>
-        </Button>
+        
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold">Análisis extenso y recomendaciones</h3>
+            <div className="flex items-center">
+              <Diamond className="h-4 w-4 text-emerald-600 mr-1.5" />
+              <span className="text-sm text-muted-foreground">1 crédito</span>
+            </div>
+          </div>
+          
+          <div className={cn(
+            "relative border rounded-lg overflow-hidden",
+            !premiumUnlocked && "backdrop-blur-md"
+          )}>
+            <div className={cn(
+              "p-4 max-h-96 overflow-y-auto",
+              !premiumUnlocked && "pointer-events-none"
+            )}>
+              {documentSections.map((section, index) => (
+                <p 
+                  key={index} 
+                  className={cn(
+                    "mb-4 font-mono text-sm whitespace-pre-line",
+                    section.isSafe ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"
+                  )}
+                >
+                  {section.text}
+                </p>
+              ))}
+            </div>
+            
+            {!premiumUnlocked && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm p-6 text-center">
+                <div className="mb-4 bg-primary/10 p-3 rounded-full">
+                  <LockKeyhole className="h-8 w-8 text-primary" />
+                </div>
+                <h4 className="text-lg font-semibold mb-2">Desbloquea el análisis completo</h4>
+                <p className="text-muted-foreground mb-6 max-w-md">
+                  Obtén recomendaciones detalladas sobre qué partes modificar para evitar el plagio y mejorar la originalidad de tu trabajo.
+                </p>
+                
+                {isAuthenticated ? (
+                  <Button 
+                    onClick={unlockPremiumContent} 
+                    className="gap-2"
+                  >
+                    <Diamond className="h-4 w-4" />
+                    Usar 1 crédito para desbloquear
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => navigate('/login')}
+                      className="mb-2"
+                    >
+                      Iniciar sesión para continuar
+                    </Button>
+                    <Button
+                      variant="link"
+                      onClick={() => navigate('/pricing')}
+                    >
+                      No tienes suficientes créditos
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="flex justify-center">
+          <Button 
+            onClick={onReset} 
+            variant="outline" 
+            className="gap-2 hover:bg-background"
+          >
+            <RotateCcw className="h-4 w-4" />
+            <span>Analizar otro documento</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

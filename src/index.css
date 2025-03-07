@@ -34,6 +34,10 @@
     --ring: 196 80% 40%;
 
     --radius: 0.75rem;
+    
+    --plagiarism-low: 142 72% 29%;
+    --plagiarism-medium: 31 90% 50%;
+    --plagiarism-high: 0 84% 48%;
   }
 
   .dark {
@@ -64,6 +68,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 196 80% 50%;
+    
+    --plagiarism-low: 142 76% 45%;
+    --plagiarism-medium: 31 95% 58%;
+    --plagiarism-high: 0 90% 60%;
   }
 }
 
