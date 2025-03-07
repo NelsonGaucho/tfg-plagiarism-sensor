@@ -2,6 +2,7 @@
 import React from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
+import { LoginButton } from './LoginButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,11 +16,11 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex items-center space-x-2">
             <img 
               src="/lovable-uploads/30ab1b90-1431-41f8-a2e2-5c0f3219f20b.png" 
-              alt="Plagiarism Sensor Logo" 
+              alt="Logo Detector de Plagio" 
               className="h-8 mr-2" 
             />
             <Link to="/" className="text-2xl font-bold text-primary tracking-tight">
-              TFG Plagiarism Sensor
+              Detector de Plagio TFG
             </Link>
           </div>
           <div className="flex items-center space-x-6">
@@ -27,16 +28,17 @@ export function Layout({ children }: LayoutProps) {
               <ul className="flex space-x-6">
                 <li>
                   <Link to="/" className="text-foreground hover:text-primary transition-colors">
-                    Home
+                    Inicio
                   </Link>
                 </li>
                 <li>
                   <Link to="/pricing" className="text-foreground hover:text-primary transition-colors">
-                    Pricing
+                    Premium
                   </Link>
                 </li>
               </ul>
             </nav>
+            <LoginButton />
             <ThemeToggle />
           </div>
         </div>
@@ -46,7 +48,7 @@ export function Layout({ children }: LayoutProps) {
       </main>
       <footer className="border-t border-border/40 backdrop-blur-sm bg-background/70">
         <div className="page-container py-6 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} TFG Plagiarism Sensor. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Detector de Plagio TFG. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

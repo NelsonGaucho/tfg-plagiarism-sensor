@@ -83,7 +83,7 @@ const PricingPage: React.FC = () => {
     <Layout>
       <div className="container max-w-6xl mx-auto py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Planes de Precios</h1>
+          <h1 className="text-4xl font-bold mb-4">Planes Premium</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Elige el plan que mejor se adapte a tus necesidades académicas. 
             Todos los planes incluyen nuestra tecnología de detección de plagio.

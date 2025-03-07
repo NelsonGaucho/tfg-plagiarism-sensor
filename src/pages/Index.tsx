@@ -6,7 +6,7 @@ import { ScanProgress } from '@/components/ScanProgress';
 import { ResultDisplay } from '@/components/ResultDisplay';
 import { motion } from 'framer-motion';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -16,7 +16,7 @@ const Index = () => {
   const [plagiarismPercentage, setPlagiarismPercentage] = useState(0);
   const { toast } = useToast();
 
-  // Mock scanning process
+  // Proceso de escaneo simulado
   useEffect(() => {
     if (!scanning || !file) return;
 
@@ -26,7 +26,7 @@ const Index = () => {
           clearInterval(interval);
           setTimeout(() => {
             setScanComplete(true);
-            // Generate a random plagiarism percentage for demo purposes
+            // Generar un porcentaje aleatorio de plagio para la demostración
             const randomPercentage = Math.floor(Math.random() * 100);
             setPlagiarismPercentage(randomPercentage);
           }, 500);
@@ -74,7 +74,7 @@ const Index = () => {
                   </h1>
                   <img 
                     src="/lovable-uploads/30ab1b90-1431-41f8-a2e2-5c0f3219f20b.png" 
-                    alt="Detector de Plagio Logo" 
+                    alt="Logo Detector de Plagio" 
                     className="h-16 ml-4" 
                   />
                 </div>
