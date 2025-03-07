@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import PricingPage from "./pages/Pricing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import { useEffect } from "react";
 
 // Función para forzar HTTPS
@@ -47,6 +49,8 @@ const App = () => {
                 <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
@@ -58,4 +62,3 @@ const App = () => {
 };
 
 export default App;
-

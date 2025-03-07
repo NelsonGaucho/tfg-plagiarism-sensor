@@ -25,14 +25,12 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    } else if (prefersDark && defaultTheme !== 'light') {
-      setTheme('dark');
-      document.documentElement.classList.add('dark');
     } else {
-      // Apply default theme
-      document.documentElement.classList.toggle('dark', defaultTheme === 'dark');
+      // Apply default light theme
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
-  }, [defaultTheme]);
+  }, []);
 
   const handleThemeChange = (newTheme: Theme) => {
     setTheme(newTheme);

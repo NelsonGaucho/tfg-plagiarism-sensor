@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, AlertTriangle, XCircle, FileText, DownloadCloud, RotateCcw, Diamond, LockKeyhole } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ResultDisplayProps {
   plagiarismPercentage: number;
@@ -17,8 +19,11 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
   const isMedium = plagiarismPercentage > 20 && plagiarismPercentage <= 50;
   const isHigh = plagiarismPercentage > 50;
   const [premiumUnlocked, setPremiumUnlocked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [remainingCredits, setRemainingCredits] = useState<number | null>(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const { toast } = useToast();
   
   const getStatusColor = () => {
     if (isLow) return 'text-plagiarism-low';
@@ -79,9 +84,46 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
     { text: "Se recomienda implementar programas de concientización sobre el uso responsable de tecnologías digitales en el ámbito universitario.", isSafe: true },
   ];
 
-  const unlockPremiumContent = () => {
-    // Aquí iría la lógica para verificar y descontar créditos
-    setPremiumUnlocked(true);
+  const unlockPremiumContent = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: 'Inicia sesión',
+        description: 'Debes iniciar sesión para usar créditos premium',
+      });
+      navigate('/login');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('use-credit');
+      
+      if (error) throw error;
+      
+      if (data.success) {
+        setPremiumUnlocked(true);
+        setRemainingCredits(data.remainingCredits);
+        toast({
+          title: 'Análisis premium desbloqueado',
+          description: data.message,
+        });
+      } else {
+        toast({
+          title: 'No tienes créditos suficientes',
+          description: 'Adquiere un plan premium para desbloquear esta función',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error using credit:', error);
+      toast({
+        title: 'Error',
+        description: 'Ha ocurrido un error al procesar tu solicitud',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -227,9 +269,10 @@ export function ResultDisplay({ plagiarismPercentage, onReset }: ResultDisplayPr
                   <Button 
                     onClick={unlockPremiumContent} 
                     className="gap-2"
+                    disabled={loading}
                   >
                     <Diamond className="h-4 w-4" />
-                    Usar 1 crédito para desbloquear
+                    {loading ? 'Procesando...' : 'Usar 1 crédito para desbloquear'}
                   </Button>
                 ) : (
                   <>

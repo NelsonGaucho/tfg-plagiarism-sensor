@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Diamond } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -11,10 +11,44 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 export function LoginButton() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const [credits, setCredits] = useState<number>(0);
+  const [hasUnlimited, setHasUnlimited] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchCredits();
+    }
+  }, [isAuthenticated, user]);
+
+  const fetchCredits = async () => {
+    if (!isAuthenticated) return;
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('check-credits');
+      
+      if (error) throw error;
+      
+      setCredits(data.creditsCount || 0);
+      setHasUnlimited(data.hasUnlimited || false);
+    } catch (error) {
+      console.error('Error fetching credits:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCreditsText = () => {
+    if (loading) return 'Cargando...';
+    if (hasUnlimited) return 'Créditos ilimitados';
+    return `${credits} créditos`;
+  };
 
   return (
     <DropdownMenu>
@@ -33,7 +67,7 @@ export function LoginButton() {
               <p className="text-sm font-medium">{user?.email}</p>
               <div className="flex items-center mt-2 text-sm text-emerald-600 dark:text-emerald-400">
                 <Diamond className="h-4 w-4 mr-1.5" />
-                <span>0 créditos</span>
+                <span>{getCreditsText()}</span>
               </div>
             </div>
             <DropdownMenuItem onClick={() => navigate('/pricing')}>
