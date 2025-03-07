@@ -15,8 +15,16 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Función para sanitizar entrada
+  const sanitizeInput = (input: string): string => {
+    return input.trim().replace(/[<>]/g, '');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Sanitizar entradas
+    const sanitizedEmail = sanitizeInput(email);
     
     if (password !== confirmPassword) {
       toast({
@@ -27,7 +35,7 @@ const Register = () => {
       return;
     }
     
-    if (register(email, password)) {
+    if (register(sanitizedEmail, password)) {
       toast({
         title: 'Registro exitoso',
         description: 'Tu cuenta ha sido creada correctamente.',
@@ -36,7 +44,7 @@ const Register = () => {
     } else {
       toast({
         title: 'Error en el registro',
-        description: 'Este correo electrónico ya está registrado.',
+        description: 'Este correo electrónico ya está registrado o los datos son inválidos.',
         variant: 'destructive',
       });
     }
@@ -65,7 +73,13 @@ const Register = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@ejemplo.com"
                   required
+                  aria-describedby="email-validation"
+                  pattern="[^<>]*@[^<>]*\.[^<>]*"
+                  title="Introduce un correo electrónico válido"
                 />
+                <p id="email-validation" className="text-xs text-muted-foreground">
+                  Introduce un correo electrónico válido
+                </p>
               </div>
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium">
@@ -78,7 +92,12 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  minLength={6}
+                  aria-describedby="password-validation"
                 />
+                <p id="password-validation" className="text-xs text-muted-foreground">
+                  La contraseña debe tener al menos 6 caracteres
+                </p>
               </div>
               <div className="space-y-2">
                 <label htmlFor="confirmPassword" className="text-sm font-medium">
@@ -91,6 +110,7 @@ const Register = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  minLength={6}
                 />
               </div>
             </CardContent>

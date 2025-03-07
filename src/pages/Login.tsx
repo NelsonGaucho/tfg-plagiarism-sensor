@@ -14,10 +14,18 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Función para sanitizar entrada
+  const sanitizeInput = (input: string): string => {
+    return input.trim().replace(/[<>]/g, '');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (login(email, password)) {
+    // Sanitizar entradas
+    const sanitizedEmail = sanitizeInput(email);
+    
+    if (login(sanitizedEmail, password)) {
       toast({
         title: 'Inicio de sesión exitoso',
         description: 'Has iniciado sesión correctamente.',
@@ -55,7 +63,13 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@ejemplo.com"
                   required
+                  aria-describedby="email-validation"
+                  pattern="[^<>]*@[^<>]*\.[^<>]*"
+                  title="Introduce un correo electrónico válido"
                 />
+                <p id="email-validation" className="text-xs text-muted-foreground">
+                  Introduce un correo electrónico válido
+                </p>
               </div>
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium">
@@ -68,7 +82,12 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  minLength={6}
+                  aria-describedby="password-validation"
                 />
+                <p id="password-validation" className="text-xs text-muted-foreground">
+                  La contraseña debe tener al menos 6 caracteres
+                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-2">
