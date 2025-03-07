@@ -38,12 +38,8 @@ export function UploadArea({ onFileAccepted, isProcessing }: UploadAreaProps) {
       fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       fileType === 'application/msword'
     ) {
-      // Pasar el archivo como Blob para procesar en memoria sin almacenarlo
-      const fileBlob = new Blob([file], { type: file.type });
-      const fileObject = new File([fileBlob], file.name, { type: file.type });
-      
-      // Procesar en memoria
-      onFileAccepted(fileObject);
+      // Procesar directamente el archivo
+      onFileAccepted(file);
       
       // No almacenar archivos localmente - eliminación del archivo subido después de uso
       // Nota: En una aplicación web en el navegador, los archivos no se guardan permanentemente
