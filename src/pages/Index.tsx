@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { UploadArea } from '@/components/UploadArea';
@@ -56,6 +55,8 @@ const Index = () => {
     setPlagiarismPercentage(0);
   };
 
+  console.log("Renderizando componente Index"); // Añadimos log para depuración
+
   return (
     <ThemeProvider>
       <Layout>
@@ -72,11 +73,6 @@ const Index = () => {
                   <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
                     Detector de Plagio para TFG y TFM
                   </h1>
-                  <img 
-                    src="/lovable-uploads/30ab1b90-1431-41f8-a2e2-5c0f3219f20b.png" 
-                    alt="Logo Detector de Plagio" 
-                    className="h-16 ml-4" 
-                  />
                 </div>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                   Analiza tu trabajo académico y detecta coincidencias con contenido publicado en internet.
