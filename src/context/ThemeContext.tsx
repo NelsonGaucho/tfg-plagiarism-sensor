@@ -10,13 +10,8 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-}
-
-export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
@@ -25,10 +20,9 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    } else {
-      // Apply default light theme
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+    } else if (prefersDark) {
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
     }
   }, []);
 

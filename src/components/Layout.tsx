@@ -9,8 +9,6 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  console.log("Renderizando componente Layout");
-  
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300">
       <header className="border-b border-border/40 backdrop-blur-sm bg-background/70 fixed top-0 w-full z-10">

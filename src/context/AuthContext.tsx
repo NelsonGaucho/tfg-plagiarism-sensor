@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 type User = {
   email: string;
   password: string; // Esta será la contraseña hasheada
-  id?: string; // Adding id field to fix the TypeScript error
 };
 
 type AuthContextType = {
@@ -50,12 +49,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const match = bcrypt.compareSync(password, foundUser.password);
         
         if (match) {
-          // Create a user object with id (using email as id for now since we're storing in localStorage)
-          const safeUser = { 
-            email: foundUser.email, 
-            password: '', 
-            id: foundUser.email // Using email as id to provide compatibility
-          };
+          // No guardar la contraseña hasheada en localStorage por seguridad
+          const safeUser = { email: foundUser.email, password: '' };
           setUser(safeUser);
           localStorage.setItem('user', JSON.stringify(safeUser));
           return true;
@@ -95,11 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('users', JSON.stringify(users));
       
       // Auto-login después del registro (sin guardar contraseña hasheada)
-      const safeUser = { 
-        email: sanitizedEmail, 
-        password: '', 
-        id: sanitizedEmail // Using email as id
-      };
+      const safeUser = { email: sanitizedEmail, password: '' };
       setUser(safeUser);
       localStorage.setItem('user', JSON.stringify(safeUser));
       

@@ -18,7 +18,6 @@ export interface PricingTier {
   highlighted?: boolean
   popular?: boolean
   credits: string
-  planType: string
 }
 
 interface PricingCardProps {

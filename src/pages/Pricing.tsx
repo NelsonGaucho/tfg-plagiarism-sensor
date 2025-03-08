@@ -1,10 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from "../components/Layout";
 import { PricingCard } from "@/components/ui/pricing-card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 
 interface Plan {
   name: string
@@ -15,7 +14,6 @@ interface Plan {
   highlighted?: boolean
   popular?: boolean
   credits: string
-  planType: string
 }
 
 const PRICING_TIERS: Plan[] = [
@@ -33,8 +31,7 @@ const PRICING_TIERS: Plan[] = [
     cta: "Comprar ahora",
     highlighted: false,
     popular: false,
-    credits: "5 créditos",
-    planType: "basic"
+    credits: "5 créditos"
   },
   {
     name: "Plan Mensual",
@@ -51,8 +48,7 @@ const PRICING_TIERS: Plan[] = [
     cta: "Suscribirse",
     highlighted: true,
     popular: true,
-    credits: "Ilimitados por 30 días",
-    planType: "monthly"
+    credits: "Ilimitados por 30 días"
   },
   {
     name: "Plan Vitalicio",
@@ -70,28 +66,12 @@ const PRICING_TIERS: Plan[] = [
     cta: "Comprar acceso vitalicio",
     highlighted: false,
     popular: false,
-    credits: "Ilimitados para siempre",
-    planType: "lifetime"
+    credits: "Ilimitados para siempre"
   },
 ];
 
 const PricingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { toast } = useToast();
-  
-  const handlePurchase = (planType: string) => {
-    if (isAuthenticated) {
-      navigate(`/checkout?plan=${planType}`);
-    } else {
-      toast({
-        title: 'Requiere inicio de sesión',
-        description: 'Debes iniciar sesión para adquirir créditos',
-        variant: 'destructive',
-      });
-      navigate('/login?redirect=pricing');
-    }
-  };
   
   return (
     <Layout>
@@ -109,7 +89,7 @@ const PricingPage: React.FC = () => {
             <PricingCard 
               key={tier.name} 
               tier={tier} 
-              onClick={() => handlePurchase(tier.planType)}
+              onClick={() => navigate('/checkout')}
             />
           ))}
         </div>
