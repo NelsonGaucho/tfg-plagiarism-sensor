@@ -31,12 +31,17 @@ export function LoginButton() {
     
     setLoading(true);
     try {
+      console.log("Fetching credits...");
       const { data, error } = await supabase.functions.invoke('check-credits');
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching credits:", error);
+        throw error;
+      }
       
-      setCredits(data.creditsCount || 0);
-      setHasUnlimited(data.hasUnlimited || false);
+      console.log("Credits data:", data);
+      setCredits(data?.creditsCount || 0);
+      setHasUnlimited(data?.hasUnlimited || false);
     } catch (error) {
       console.error('Error fetching credits:', error);
     } finally {

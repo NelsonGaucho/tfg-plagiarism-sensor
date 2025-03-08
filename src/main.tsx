@@ -4,17 +4,16 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-console.log("Iniciando la aplicación");
+console.log("Starting application");
 
-// Asegurarse de que el elemento root exista
+// Ensure root element exists
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  console.error("No se pudo encontrar el elemento 'root'. Verifica tu HTML.");
+  console.error("Could not find 'root' element. Check your HTML.");
 } else {
-  console.log("Elemento root encontrado, procediendo a renderizar la aplicación");
-  createRoot(rootElement).render(
-    <App />
-  );
-  console.log("Aplicación renderizada correctamente");
+  console.log("Root element found, proceeding to render application");
+  const root = createRoot(rootElement);
+  root.render(<App />);
+  console.log("Application rendered successfully");
 }

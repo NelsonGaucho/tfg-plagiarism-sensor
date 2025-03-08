@@ -14,11 +14,11 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 
-// Crear una instancia de QueryClient
+// Create a QueryClient instance
 const queryClient = new QueryClient();
 
 const App = () => {
-  console.log("Renderizando App");
+  console.log("Rendering App component");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -35,9 +35,9 @@ const App = () => {
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Toaster />
+              <Sonner />
             </BrowserRouter>
-            <Toaster />
-            <Sonner />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

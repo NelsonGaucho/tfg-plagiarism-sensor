@@ -18,8 +18,14 @@ import { CreditCard, ShieldCheck, Lock, Tag, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
-// Initialize Stripe with public key
-const stripePromise = loadStripe('pk_live_51NG1WAApPssJbISHbPMcYV8oL8mnAK6lWO3tT0K20RQ1dR2tHqi5YboYlq6uJBT6YYY86F6CRgtmpYvPok9CGORA00qIxCoDjI');
+// Initialize Stripe with public key - use a try/catch to prevent errors from breaking the app
+let stripePromise;
+try {
+  stripePromise = loadStripe('pk_live_51NG1WAApPssJbISHbPMcYV8oL8mnAK6lWO3tT0K20RQ1dR2tHqi5YboYlq6uJBT6YYY86F6CRgtmpYvPok9CGORA00qIxCoDjI');
+} catch (error) {
+  console.error("Error loading Stripe:", error);
+  // We'll handle this in the component
+}
 
 const CheckoutPage = () => {
   const { isAuthenticated, user } = useAuth();
@@ -28,6 +34,7 @@ const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [planType, setPlanType] = useState<string>('basic');
   const [loading, setLoading] = useState<boolean>(false);
+  const [stripeError, setStripeError] = useState<boolean>(false);
   const { toast } = useToast();
   
   // Get the plan type from the URL query parameter
@@ -58,6 +65,7 @@ const CheckoutPage = () => {
     const createPaymentIntent = async () => {
       setLoading(true);
       try {
+        console.log("Creating payment intent for plan:", planType);
         const { data, error } = await supabase.functions.invoke('create-payment', {
           body: {
             planType,
@@ -65,7 +73,12 @@ const CheckoutPage = () => {
           },
         });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Payment intent error:", error);
+          throw error;
+        }
+        
+        console.log("Payment intent created successfully:", data);
         setClientSecret(data.clientSecret);
       } catch (error) {
         console.error('Error creating payment intent:', error);
@@ -112,6 +125,21 @@ const CheckoutPage = () => {
   };
 
   const plan = getPlanDetails();
+
+  // If Stripe failed to load, show a friendly message
+  if (stripeError || !stripePromise) {
+    return (
+      <Layout>
+        <div className="max-w-3xl mx-auto py-12 text-center">
+          <h2 className="text-2xl font-bold mb-4">Lo sentimos</h2>
+          <p className="mb-6">
+            Ha ocurrido un error cargando el sistema de pagos. Por favor, inténtelo más tarde.
+          </p>
+          <Button onClick={() => navigate('/pricing')}>Volver a Planes</Button>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!isAuthenticated) {
     return null; // We'll redirect from the useEffect
@@ -180,7 +208,7 @@ const CheckoutPage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {clientSecret ? (
+                {clientSecret && stripePromise ? (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
                     <CheckoutForm planType={planType} />
                   </Elements>
@@ -218,6 +246,7 @@ const CheckoutForm = ({ planType }: { planType: string }) => {
     setErrorMessage(null);
 
     try {
+      console.log("Processing payment for plan:", planType);
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -227,6 +256,7 @@ const CheckoutForm = ({ planType }: { planType: string }) => {
       });
 
       if (error) {
+        console.error("Payment error:", error);
         setErrorMessage(error.message || 'Error al procesar el pago');
         toast({
           title: 'Error en el pago',
@@ -234,6 +264,7 @@ const CheckoutForm = ({ planType }: { planType: string }) => {
           variant: 'destructive',
         });
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        console.log("Payment succeeded:", paymentIntent);
         toast({
           title: 'Pago completado',
           description: 'Tu pago ha sido procesado correctamente',
