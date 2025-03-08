@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
+  console.log("Renderizando Index component");
   const [file, setFile] = useState<File | null>(null);
   const [scanning, setScanning] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -18,6 +19,7 @@ const Index = () => {
   // Proceso de escaneo simulado
   useEffect(() => {
     if (!scanning || !file) return;
+    console.log("Iniciando escaneo simulado");
 
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
@@ -28,6 +30,7 @@ const Index = () => {
             // Generar un porcentaje aleatorio de plagio para la demostración
             const randomPercentage = Math.floor(Math.random() * 100);
             setPlagiarismPercentage(randomPercentage);
+            console.log("Escaneo completado, porcentaje de plagio:", randomPercentage);
           }, 500);
           return 100;
         }
@@ -39,6 +42,7 @@ const Index = () => {
   }, [scanning, file]);
 
   const handleFileAccepted = (acceptedFile: File) => {
+    console.log("Archivo aceptado:", acceptedFile.name);
     setFile(acceptedFile);
     setScanning(true);
     toast({
@@ -48,14 +52,13 @@ const Index = () => {
   };
 
   const handleReset = () => {
+    console.log("Reiniciando proceso");
     setFile(null);
     setScanning(false);
     setProgress(0);
     setScanComplete(false);
     setPlagiarismPercentage(0);
   };
-
-  console.log("Renderizando componente Index"); // Log para depuración
 
   return (
     <Layout>
