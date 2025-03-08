@@ -14,8 +14,15 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 
-// Create a QueryClient instance
-const queryClient = new QueryClient();
+// Create a QueryClient instance with default options to handle errors better
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => {
   console.log("Rendering App component");

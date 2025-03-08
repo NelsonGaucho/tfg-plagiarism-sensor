@@ -9,7 +9,7 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const plan = searchParams.get('plan');
+  const plan = searchParams.get('plan') || 'premium';
 
   const getPlanName = () => {
     switch (plan) {
@@ -31,14 +31,13 @@ const PaymentSuccess = () => {
           <CheckCircle2 className="h-16 w-16 text-green-500" />
         </div>
         <h1 className="text-2xl font-bold mb-2">¡Pago completado!</h1>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-gray-600 mb-6">
           Tu compra de {getPlanName()} ha sido procesada correctamente.
           Los créditos han sido añadidos a tu cuenta.
         </p>
         <div className="space-y-3">
           <Button
             onClick={() => navigate('/')}
-            variant="default"
             className="w-full"
           >
             Ir al detector de plagio

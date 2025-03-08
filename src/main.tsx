@@ -17,7 +17,11 @@ if (!rootElement) {
   
   // Add error boundary for the entire app to prevent white screen issues
   try {
-    root.render(<App />);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
     console.log("Application rendered successfully");
   } catch (error) {
     console.error("Failed to render application:", error);

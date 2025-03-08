@@ -32,11 +32,20 @@ export function LoginButton() {
     setLoading(true);
     try {
       console.log("Fetching credits...");
-      const { data, error } = await supabase.functions.invoke('check-credits');
+      // Safely call the function
+      let data, error;
+      try {
+        const response = await supabase.functions.invoke('check-credits');
+        data = response.data;
+        error = response.error;
+      } catch (invokeError) {
+        console.error("Error invoking function:", invokeError);
+        error = invokeError;
+      }
       
       if (error) {
         console.error("Error fetching credits:", error);
-        throw error;
+        return;
       }
       
       console.log("Credits data:", data);
