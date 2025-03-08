@@ -13,29 +13,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
-import { useEffect } from "react";
 
-// Función para forzar HTTPS
-const forceHTTPS = () => {
-  if (window.location.protocol === 'http:' && 
-      window.location.hostname !== 'localhost' && 
-      !window.location.hostname.includes('127.0.0.1')) {
-    window.location.href = window.location.href.replace('http:', 'https:');
-  }
-};
-
+// Crear una instancia de QueryClient
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Forzar HTTPS al cargar la aplicación
-  useEffect(() => {
-    forceHTTPS();
-    console.log("App component rendered");
-    
-    // Establecer tema claro como predeterminado
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-  }, []);
+  console.log("Renderizando App");
 
   return (
     <QueryClientProvider client={queryClient}>
