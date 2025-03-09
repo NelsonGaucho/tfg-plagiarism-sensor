@@ -69,15 +69,13 @@ const App = () => {
   }
 
   try {
-    // Usar HashRouter en lugar de BrowserRouter para GitHub Pages
-    const Router = window.location.hostname === 'localhost' ? BrowserRouter : HashRouter;
-
+    // Siempre usar HashRouter para GitHub Pages
     return (
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme="light">
           <AuthProvider>
             <TooltipProvider>
-              <Router>
+              <HashRouter>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/pricing" element={<PricingPage />} />
@@ -89,7 +87,7 @@ const App = () => {
                 </Routes>
                 <Toaster />
                 <Sonner />
-              </Router>
+              </HashRouter>
             </TooltipProvider>
           </AuthProvider>
         </ThemeProvider>

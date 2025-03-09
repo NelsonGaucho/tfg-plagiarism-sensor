@@ -12,6 +12,7 @@ export default defineConfig(({ mode, command }) => {
     if (!fs.existsSync('dist')) {
       fs.mkdirSync('dist', { recursive: true });
     }
+    // Crear archivo .nojekyll para evitar el procesamiento de Jekyll en GitHub Pages
     fs.writeFileSync('dist/.nojekyll', '');
     
     // También crear un archivo 404.html que redirija al index.html
@@ -23,13 +24,13 @@ export default defineConfig(({ mode, command }) => {
     <title>Detector de Plagio TFG</title>
     <script type="text/javascript">
       // Redirigir a la página principal manteniendo la ruta
-      var segmentCount = 0;
+      var pathSegmentsToKeep = 0;
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?p=/' +
-        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
         l.hash
       );
     </script>
@@ -69,7 +70,7 @@ export default defineConfig(({ mode, command }) => {
         }
       }
     },
-    // Configuración para GitHub Pages
+    // Configuración para GitHub Pages - usar './' para rutas relativas
     base: './',
   };
 });
