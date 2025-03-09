@@ -11,6 +11,15 @@ const rootElement = document.getElementById("root");
 
 if (!rootElement) {
   console.error("Could not find 'root' element. Check your HTML.");
+  // Crear un elemento de fallback para mostrar el error
+  const fallbackElement = document.createElement('div');
+  fallbackElement.innerHTML = `
+    <div style="padding: 20px; font-family: system-ui;">
+      <h1>Error al iniciar la aplicación</h1>
+      <p>No se encontró el elemento 'root'. Revise el HTML.</p>
+    </div>
+  `;
+  document.body.appendChild(fallbackElement);
 } else {
   console.log("Root element found, proceeding to render application");
   const root = createRoot(rootElement);
@@ -35,3 +44,18 @@ if (!rootElement) {
     );
   }
 }
+
+// Agregar un listener para capturar errores no controlados
+window.addEventListener('error', (event) => {
+  console.error('Unhandled error:', event.error);
+  const rootEl = document.getElementById("root");
+  if (rootEl && rootEl.innerHTML === '') {
+    rootEl.innerHTML = `
+      <div style="padding: 20px; font-family: system-ui;">
+        <h1>Error inesperado</h1>
+        <p>Ocurrió un error inesperado. Por favor, recarga la página.</p>
+        <pre>${event.error?.message || 'Error desconocido'}</pre>
+      </div>
+    `;
+  }
+});
