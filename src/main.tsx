@@ -59,3 +59,18 @@ window.addEventListener('error', (event) => {
     `;
   }
 });
+
+// Agregar un listener para capturar rechazos de promesas no manejados
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+  const rootEl = document.getElementById("root");
+  if (rootEl && rootEl.innerHTML === '') {
+    rootEl.innerHTML = `
+      <div style="padding: 20px; font-family: system-ui;">
+        <h1>Error de promesa no manejada</h1>
+        <p>Ocurrió un error en una promesa no manejada. Por favor, recarga la página.</p>
+        <pre>${event.reason?.message || 'Error desconocido'}</pre>
+      </div>
+    `;
+  }
+});
